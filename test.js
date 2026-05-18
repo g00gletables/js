@@ -1,0 +1,203 @@
+(function() {
+    // Создаём модальное окно
+    const modal = document.createElement('div');
+    modal.id = 'gradient-modal';
+    modal.innerHTML = `
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>✨ Градиентное модальное окно ✨</h2>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Это окно создано через букмарклет!</p>
+                    <p>Фон переливается разными цветами 🎨</p>
+                    <input type="text" placeholder="Пример поля ввода" style="width: 100%; padding: 8px; margin-top: 10px;">
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-close-btn">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Стили с анимированным градиентом
+    const style = document.createElement('style');
+    style.textContent = `
+        #gradient-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999999;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            animation: slideIn 0.3s ease;
+            position: relative;
+        }
+        
+        /* Переливающийся градиентный бордер */
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, 
+                #ff0000, #ff7700, #ffff00, 
+                #00ff00, #0000ff, #4b0082, 
+                #9400d3, #ff0000);
+            background-size: 400% 400%;
+            border-radius: 18px;
+            z-index: -1;
+            animation: gradientShift 3s ease infinite;
+        }
+        
+        .modal-header {
+            padding: 20px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .modal-body {
+            padding: 24px;
+            background: white;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .modal-footer {
+            padding: 16px 24px;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: flex-end;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .modal-close-btn {
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        
+        .modal-close-btn:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        input {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: border-color 0.2s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #764ba2;
+        }
+    `;
+    
+    document.head.appendChild(style);
+    document.body.appendChild(modal);
+    
+    // Функции закрытия
+    function closeModal() {
+        modal.remove();
+        style.remove();
+    }
+    
+    // Обработчики закрытия
+    modal.querySelectorAll('.modal-close, .modal-close-btn').forEach(btn => {
+        btn.addEventListener('click', closeModal);
+    });
+    
+    // Закрытие по клику на оверлей
+    modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
+        if (e.target === modal.querySelector('.modal-overlay')) {
+            closeModal();
+        }
+    });
+    
+    // Закрытие по Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && document.getElementById('gradient-modal')) {
+            closeModal();
+        }
+    });
+})();
